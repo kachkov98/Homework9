@@ -1,4 +1,5 @@
-#include <iostream>
+#ifndef METAPRIME_H
+#define METAPRIME_H
 #include <type_traits>
 
 typedef unsigned int uint;
@@ -10,9 +11,9 @@ struct Sqrt
 private:
 	static const uint mid = (lo + hi + 1) / 2;
 public:
-	static const uint value =  std::conditional<(n < mid * mid),
-                                                Sqrt<n, lo, mid - 1>,
-                                                Sqrt<n, mid, hi>>::type::value;
+	static const uint value =  std::conditional<(n < mid *mid),
+	                                            Sqrt<n, lo, mid - 1>,
+	                                            Sqrt<n, mid, hi>>::type::value;
 };
 
 template<uint n, uint res>
@@ -35,9 +36,9 @@ std::integral_constant<bool, std::conditional<(cur_div > max_div),
 // DoNthPrime
 template<uint n, uint cur_n, uint number>
 struct DoNthPrime:
-std::integral_constant<uint, std::conditional <IsPrime<number>::value,
-                                               DoNthPrime<n, cur_n + 1, number + 2>,
-                                               DoNthPrime<n, cur_n    , number + 2>>::type::value>
+std::integral_constant<uint, std::conditional<IsPrime<number>::value,
+                                              DoNthPrime<n, cur_n + 1, number + 2>,
+                                              DoNthPrime<n, cur_n    , number + 2>>::type::value>
 {
 };
 
@@ -62,9 +63,4 @@ struct NthPrime<1>:
 std::integral_constant<uint, 2>
 {
 };
-
-int main ()
-{
-	std::cout << NthPrime<270>::value << std::endl;
-	return 0;
-}
+#endif
