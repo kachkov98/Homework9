@@ -11,7 +11,8 @@ public:
 	template<typename Callback>
 	void for_each (Callback callback)
 	{
-		callback (Generator<start>::value, start);
+		typename Generator<start>::type dummy;
+		callback (dummy, start);
 		next.for_each (callback);
 	};
 };
@@ -22,7 +23,8 @@ struct List<Generator, start, start>
 	template<typename Callback>
 	void for_each (Callback callback)
 	{
-		callback (Generator<start>::value, start);
+		typename Generator<start>::type dummy;
+		callback (dummy, start);
 	};
 };
 #endif

@@ -27,10 +27,11 @@ uint RuntimeNthPrime (uint n)
 struct callback
 {
 	static bool errors;
-	void operator() (uint meta_prime, uint i)
+	template<typename MetaPrime>
+	void operator() (MetaPrime meta_prime, uint i)
 	{
 		uint prime = RuntimeNthPrime(i);
-		if (prime != meta_prime)
+		if (prime != MetaPrime::value)
 		{
 			std::cout << "Error: N = " << i << " Prime = " << prime << " Meta-prime = " << meta_prime << std::endl;
 			errors = true;
