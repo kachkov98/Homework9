@@ -6,41 +6,42 @@
 typedef unsigned int uint;
 typedef unsigned long long ullong;
 
-template<uint N>
-struct Fact:
-std::integral_constant<ullong, N * Fact<N-1>::value>
+template<uint N, uint K>
+struct BinomCoeff:
+std::integral_constant<ullong, BinomCoeff<N-1, K-1>::value + BinomCoeff<N-1, K>::value>
 {
 };
 
-template<>
-struct Fact<0>:
+template<uint N>
+struct BinomCoeff<N, 0>:
+std::integral_constant<ullong, 1>
+{
+};
+
+template<uint N>
+struct BinomCoeff<N, N>:
 std::integral_constant<ullong, 1>
 {
 };
 
 template<uint N, uint K>
-struct BinomCoeffNorm:
-std::ratio<-Fact<N-1>::value, Fact<N-K>::value * Fact<K>::value>
-{
-};
-
-template<uint N, uint K>
-struct DoBernulliNum:
-std::ratio_add<std::ratio_multiply<BinomCoeffNorm<N+1, K+1>,
-                                   DoBernulliNum<N-K, 1>>,
-               DoBernulliNum<N, K+1>>
+struct DoBernoulliNum:
+std::ratio_add<std::ratio_multiply<std::ratio<-1, N+1>,
+               std::ratio_multiply<std::ratio<BinomCoeff<N+1, K+1>::value>,
+                                   DoBernoulliNum<N-K, 1>>>,
+               DoBernoulliNum<N, K+1>>
 {
 };
 
 template<uint N>
-struct DoBernulliNum<N, N>:
+struct DoBernoulliNum<N, N>:
 std::ratio<-1, N+1>
 {
 };
 
 template<uint N>
 struct BernoulliNum:
-DoBernulliNum<N, 1>
+DoBernoulliNum<N, 1>
 {
 };
 
@@ -58,8 +59,10 @@ struct ratio_printer
 		std::cout << "B(" << i << ") = ";
 		long long num = Ratio::num;
 		long long den = Ratio::den;
-		long long integral = num / den;
+		long long integral = llabs (num / den);
 		long long fractional = llabs(num % den);
+		if (num < 0)
+			std::cout << '-';
 		if (integral || !fractional)
 			std::cout << integral << ' ';
 		if (fractional)
@@ -72,7 +75,7 @@ struct ratio_printer
 
 int main ()
 {
-	List<BernoulliNum, 0, 20> bernoulli_nums;
+	List<BernoulliNum, 0, 35> bernoulli_nums;
 	bernoulli_nums.for_each(ratio_printer());
 	return 0;
 }
