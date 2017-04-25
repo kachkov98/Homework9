@@ -31,7 +31,9 @@ template<typename In, typename Out>
 std::enable_if_t<std::is_pointer<In>::value &&
                  std::is_pointer<Out>::value &&
                  std::is_trivially_copyable<typename std::iterator_traits<In>::value_type>::value &&
-                 std::is_trivially_copyable<typename std::iterator_traits<Out>::value_type>::value>
+                 std::is_trivially_copyable<typename std::iterator_traits<Out>::value_type>::value &&
+                 sizeof(typename std::iterator_traits<In>::value_type) ==
+                 sizeof(typename std::iterator_traits<Out>::value_type)>
 Copy (In begin, In end, Out out)
 {
 	std::cout << "memcpy copy" << std::endl;
