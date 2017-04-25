@@ -7,19 +7,25 @@ typedef unsigned int uint;
 typedef unsigned long long ullong;
 
 template<uint N, uint K>
-struct BinomCoeff:
+struct Binomial;
+
+template<uint N, uint K>
+using BinomCoeff = Binomial<N, K < N - K ? K : N - K>;
+
+template<uint N, uint K>
+struct Binomial:
 std::integral_constant<ullong, BinomCoeff<N-1, K-1>::value + BinomCoeff<N-1, K>::value>
 {
 };
 
 template<uint N>
-struct BinomCoeff<N, 0>:
+struct Binomial<N, 0>:
 std::integral_constant<ullong, 1>
 {
 };
 
 template<uint N>
-struct BinomCoeff<N, N>:
+struct Binomial<N, N>:
 std::integral_constant<ullong, 1>
 {
 };
